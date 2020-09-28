@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { fetchForecastById } from '../app/api';
-import * as debug from '../app/debug';
-import { mockDetail } from '../app/apiMock';
-
-import { Temperature } from './Temperature';
-import { MediumIcon, HugeIcon } from './Icons';
 import {
   fetchDetailsAsync,
   selectMessage,
   selectDetails,
 } from './detailsSlice';
 
-// TODO: Replace with RefreshButton ; switch to styled-components
-import refresh from '../assets/refresh-icon.svg';
+import { Temperature } from './Temperature';
+import { MediumIcon, HugeIcon } from './Icons';
+import { RefreshButton } from './Buttons';
+
 import styles from './Details.module.css';
 
 const DayTileDiv = styled.div`
@@ -40,12 +36,17 @@ function DayTile(props) {
 // Fixed height to reduce jank
 const EmptyDetail = styled.div`
   color: gray;
-  height: 400px;
+  height: 500px;
+`;
+
+const DetailDiv = styled.div`
+  height: 500px;
 `;
 
 export function Details() {
     const message = useSelector(selectMessage);
     const details = useSelector(selectDetails);
+    const dispatch = useDispatch();
 
     console.log('DETAILS', details);
 
@@ -61,14 +62,11 @@ export function Details() {
     const dayTiles = details.weatherList.map((i, idx) => <DayTile key={idx} info={i} />)
 
     return (
-        <div>
+        <DetailDiv>
           <div className={styles.rows}>
             <div className={styles.header}>
               <h1 className={styles.headerText}>{details.city}</h1>
-              {/* TODO: Have refresh actually refresh */}
-              <button className={styles.headerRefresh + ' ' + styles.iconButton}>
-                <img src={refresh} className={styles.iconRefresh} alt="refresh" />
-              </button>
+              <RefreshButton onClick={() => dispatch(fetchDetailsAsync(details.id))} height="32px" />
             </div>
 
             <div className={styles.detailRow}>
@@ -85,6 +83,6 @@ export function Details() {
           <div className={styles.forecastRow}>
             {dayTiles}
           </div>
-        </div>
+        </DetailDiv>
     );
 }

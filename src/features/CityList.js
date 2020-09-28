@@ -57,6 +57,12 @@ function CityRow({ city }) {
 // Give the error row fixed height to prevent jank
 const ErrorRow = styled.div`
     height: 24px;
+    border-bottom: 2px solid black;
+`;
+
+const RecentRow = styled.div`
+    border-bottom: 1px solid black;
+    color: grey;
 `;
 
 export function CityList() {
@@ -65,7 +71,7 @@ export function CityList() {
     const dispatch = useDispatch();
     const [cityName, setCityName] = useState('');
 
-    const stuff = cities.map(c => <CityRow key={c.id} city={c} /> );
+    const cityRows = cities.map(c => <CityRow key={c.id} city={c} /> );
 
     return (
         <div>
@@ -74,8 +80,9 @@ export function CityList() {
             {/* TODO: Hide */}
             {/* <button onClick={() => dispatch(debugFillAsync())}>Debug Fill</button> */}
             <ErrorRow>{error}</ErrorRow>
+            <RecentRow>Recent Locations</RecentRow>
             <div>
-                {stuff}
+                {cityRows}
             </div>
             <button onClick={() => dispatch(clear())}>Clear</button>
         </div>

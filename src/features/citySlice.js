@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   fetchCurrentByName,
   fetchCurrentById,
-  fetchForecastById,
 } from '../app/api';
 import * as debug from '../app/debug'
 import { mockList } from '../app/apiMock';

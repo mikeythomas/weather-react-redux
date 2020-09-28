@@ -13,11 +13,11 @@ const Button = styled.button`
 `;
 
 const Image = styled.img`
-  height: 16px;
+  height: ${props => props.height || '16px'};
 `;
 
-function ImageButton({ onClick, src }) {
-  return <Button onClick={onClick}><Image src={src} /></Button>
+function ImageButton({ onClick, src, height }) {
+  return <Button onClick={onClick}><Image src={src} height={height} /></Button>
 }
 
 export const CloseButton = props => <ImageButton {...props} src={close} />

@@ -93,6 +93,7 @@ export async function fetchForecastById(cityId) {
 
   return {
     city: city.name,
+    id: city.id,
     weatherList: list.map(transformListItem),
   };
 }

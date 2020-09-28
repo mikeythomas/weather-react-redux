@@ -37,6 +37,7 @@ export const mockList = [
 // TODO: Do I need to use city.timezone to adjust list[].dt?
 export const mockDetail = {
   "city": "Halifax",
+  id: 6324729,
   "weatherList": [
     {
       "timestamp": 1600963200000,

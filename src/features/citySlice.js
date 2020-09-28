@@ -25,16 +25,23 @@ export const citySlice = createSlice({
     },
     addCity: (state, action) => {
       const city = action.payload;
-      state.list = [city, ...state.list].slice(0, MAX_CITIES)
+      // Duplicate guard
+      if (state.list.filter(c => c.id === city.id).length) {
+        state.error = `City ${city.name} already added`
+      } else {
+        state.list = [city, ...state.list].slice(0, MAX_CITIES)
+      }
     },
     removeCity: (state, action) => {
       const city = action.payload;
-      console.log('removeCity', city, state.list.map(c => c.id), state.list.map(c => c === city));
-      // state.list = state.list.filter(c => c === city);
+      console.log('removeCity', city);
+      state.list = state.list.filter(c => c.id !== city.id);
     },
     updateCity: (state, action) => {
       const city = action.payload;
-      console.log('updateCity', state.list.indexOf(city), state.list);
+      console.log('updateCity', city);
+      state.list = state.list.map(c => c.id === city.id ? city : c);
+
     },
     clear: (state, action) => {
       state.list = [];
@@ -50,12 +57,13 @@ const { updateCity, setError, clearError } = citySlice.actions;
 // Thunks for async actions
 export const validateByNameAsync = cityName => async dispatch => {
   console.log(`validateByNameAsync '${cityName}'`);
+  dispatch(clearError());
+  // TODO: Set loading state
 
   try {
     const result = await fetchCurrentByName(cityName);
     console.log('validateByNameAsync result = ', result);
     dispatch(addCity(result));
-    dispatch(clearError());
   } catch (err) {
     console.error(err);
     dispatch(setError(err.message || 'Unknown error occurred'));

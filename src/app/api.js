@@ -14,10 +14,6 @@ function urlHelper(endpoint, params) {
   return url;
 }
 
-async function delay(milliseconds) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
 async function fetchAndParse(url, debug = null) {
   debug && console.log(debug, ' => ', url.href);
   const response = await fetch(url);
@@ -99,32 +95,4 @@ export async function fetchForecastById(cityId) {
     city: city.name,
     weatherList: list.map(transformListItem),
   };
-}
-
-// api.openweathermap.org/data/2.5/weather?q=Halifax&appid=c51223c219d6aec8cb8c5210449bd859&units=metric
-// api.openweathermap.org/data/2.5/weather?id=6324729&appid=c51223c219d6aec8cb8c5210449bd859&units=metric
-// api.openweathermap.org/data/2.5/forecast/daily?id=6324729&cnt=5&appid=c51223c219d6aec8cb8c5210449bd859&units=metric
-
-export function getCurrentByName(cityName) {
-  const city = null;//data.filter(c => c.name === cityName);
-  if (!city.length) {
-    return {success: false, error: "City not found"};
-  }
-  return {...city[0], success: true};
-}
-
-export function getCurrentById(cityId) {
-  const city = null;//data.filter(c => c.id === cityId);
-  if (!city.length) {
-    console.error(`Refresh failed on city id ${cityId}`);
-    return {success: false, error: "Unknown error"};
-  }
-  const freshCity = {...city[0]};
-  freshCity.temperature += 20*Math.random() - 10;
-  freshCity.success = true;
-  return freshCity;
-}
-
-export function getForecastById(cityId) {
-  throw new Error("Not implemented");
 }

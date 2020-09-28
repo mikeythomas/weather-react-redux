@@ -9,19 +9,38 @@ import {
     selectError,
     selectCities,
 } from './citySlice';
-import { Temperature } from './Temperature'
+import styled from 'styled-components';
 
-function CityRow(props) {
+import { Temperature } from './Temperature'
+import { CloseButton, RefreshButton } from './Buttons';
+
+const CityDiv = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 4px 0;
+    border-bottom: 2px solid grey;
+`;
+
+const CityText = styled.div`
+    flex: auto;
+`;
+
+function CityRow({ city }) {
     const dispatch = useDispatch();
 
     return (
-        <div>
-            <div>{props.city.name} - <Temperature value={props.city.temperature} /></div>
-            <button onClick={() => dispatch(refreshByIdAsync(props.city.id))}>R</button>
-            <button onClick={() => dispatch(removeCity(props.city))}>X</button>
-        </div>
+        <CityDiv>
+            <CityText>{city.name} - <Temperature value={city.temperature}/> {city.weather.main}</CityText>
+            <RefreshButton onClick={() => dispatch(refreshByIdAsync(city.id))} />
+            <CloseButton onClick={() => dispatch(removeCity(city))} />
+        </CityDiv>
     );
 }
+
+// Give the error row fixed height to prevent jank
+const ErrorRow = styled.div`
+    height: 24px;
+`;
 
 export function CityList() {
     const error = useSelector(selectError);
@@ -36,7 +55,7 @@ export function CityList() {
             <input type="text" placeholder="Type city name" value={cityName} onChange={e => setCityName(e.target.value)} />
             <button onClick={() => dispatch(validateByNameAsync(cityName))}>+</button>
             <button onClick={() => dispatch(debugFillAsync())}>Debug Fill</button>
-            <div>{error}</div>
+            <ErrorRow>{error}</ErrorRow>
             <div>
                 {stuff}
             </div>

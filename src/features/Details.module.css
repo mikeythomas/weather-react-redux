@@ -38,10 +38,6 @@
   flex-direction: row;
 }
 
-.iconHuge {
-  height: 8px;
-}
-
 .detailList {
   display: flex;
   flex-direction: column;

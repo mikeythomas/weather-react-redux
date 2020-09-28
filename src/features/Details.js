@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { Temperature } from './Temperature';
+import { MediumIcon, HugeIcon } from './Icon';
 import {
   validateByNameAsync,
   debugFillAsync,
@@ -11,38 +12,18 @@ import {
   selectError,
   selectCities,
 } from './citySlice';
-import logo from '../logo.svg';
+// TODO: Replace with refresh icon
+import logo from '../assets/refresh-icon.svg';
 import styles from './Details.module.css';
 
 import { fetchForecastById } from '../app/api';
 import * as debug from '../app/debug';
 import { mockDetail } from '../app/apiMock';
 
-// TODO: Actually use the weather
-function weatherToIcon(weather) {
-  console.log('weatherToIcon ignoring', weather);
-  return logo;
-}
-
-function Icon({ className, weather }) {
-  const src = weatherToIcon(weather);
-
-  return <img className={className} src={src} alt={weather.main} />
-}
-
-const MediumIcon = styled(Icon)`
-  height: 48px;
-`;
-
-const HugeIcon = styled(Icon)`
-  height: 40vh;
-`;
-
 const DayTileDiv = styled.div`
   text-align: center;
   margin: 0 32px;
 `;
-
 
 function DayTile(props) {
   const { timestamp, temperature, weather } = props.info;

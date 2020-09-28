@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { Temperature } from './Temperature';
-import { MediumIcon, HugeIcon } from './Icon';
-import {
-  validateByNameAsync,
-  debugFillAsync,
-  refreshByIdAsync,
-  removeCity,
-  clear,
-  selectError,
-  selectCities,
-} from './citySlice';
-// TODO: Replace with refresh icon
-import logo from '../assets/refresh-icon.svg';
-import styles from './Details.module.css';
 
 import { fetchForecastById } from '../app/api';
 import * as debug from '../app/debug';
 import { mockDetail } from '../app/apiMock';
+
+import { Temperature } from './Temperature';
+import { MediumIcon, HugeIcon } from './Icons';
+import {
+  fetchDetailsAsync,
+  selectMessage,
+  selectDetails,
+} from './detailsSlice';
+
+// TODO: Replace with RefreshButton ; switch to styled-components
+import refresh from '../assets/refresh-icon.svg';
+import styles from './Details.module.css';
 
 const DayTileDiv = styled.div`
   text-align: center;
@@ -39,41 +37,37 @@ function DayTile(props) {
   );
 }
 
-export function Details() {
-    const error = useSelector(selectError);
-    const cities = useSelector(selectCities);
-    const dispatch = useDispatch();
-    // TODO: Move from state to Redux
-    const initialState = (debug.mockForStyling && mockDetail) || null;
-    const [details, setDetails] = useState(initialState);
-    const props = details;
+// Fixed height to reduce jank
+const EmptyDetail = styled.div`
+  color: gray;
+  height: 400px;
+`;
 
-    async function testForecast() {
-      const result = await fetchForecastById(6324729);
-      console.log('FORECAST', result);
-    }
+export function Details() {
+    const message = useSelector(selectMessage);
+    const details = useSelector(selectDetails);
+
+    console.log('DETAILS', details);
 
     if (!details) {
       return (
         <>
-          <div className={styles.empty}>Select City For Details</div>
-          <button onClick={testForecast}>TEST FORECAST</button>
+          <EmptyDetail>{message || 'Select City For Details'}</EmptyDetail>
         </>
       );
     }
 
-    // const stuff = cities.map(c => <CityRow key={c.id} city={c} /> );
-    console.log('PROPS', props);
-    const today = props.weatherList[0];
-    const dayTiles = props.weatherList.map(i => <DayTile info={i} />)
+    const today = details.weatherList[0];
+    const dayTiles = details.weatherList.map((i, idx) => <DayTile key={idx} info={i} />)
 
     return (
         <div>
           <div className={styles.rows}>
             <div className={styles.header}>
-              <h1 className={styles.headerText}>{props.city}</h1>
+              <h1 className={styles.headerText}>{details.city}</h1>
+              {/* TODO: Have refresh actually refresh */}
               <button className={styles.headerRefresh + ' ' + styles.iconButton}>
-                <img src={logo} className={styles.iconRefresh} alt="refresh" />
+                <img src={refresh} className={styles.iconRefresh} alt="refresh" />
               </button>
             </div>
 

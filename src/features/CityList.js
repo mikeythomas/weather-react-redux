@@ -9,10 +9,14 @@ import {
     selectError,
     selectCities,
 } from './citySlice';
+import {
+    fetchDetailsAsync,
+} from './detailsSlice';
 import styled from 'styled-components';
 
 import { Temperature } from './Temperature'
 import { CloseButton, RefreshButton } from './Buttons';
+import { SmallIcon } from './Icons';
 
 const CityDiv = styled.div`
     display: flex;
@@ -25,14 +29,27 @@ const CityText = styled.div`
     flex: auto;
 `;
 
+// This is to prevent clicking refresh / remove from propagating to the row
+// and refreshing the details
+function dispatchWrapper(dispatch, action) {
+    return e => {
+        console.log(e);
+        dispatch(action);
+        e.stopPropagation();
+    };
+}
+
 function CityRow({ city }) {
     const dispatch = useDispatch();
 
     return (
-        <CityDiv>
-            <CityText>{city.name} - <Temperature value={city.temperature}/> {city.weather.main}</CityText>
-            <RefreshButton onClick={() => dispatch(refreshByIdAsync(city.id))} />
-            <CloseButton onClick={() => dispatch(removeCity(city))} />
+        <CityDiv onClick={() => dispatch(fetchDetailsAsync(city.id))}>
+            <CityText>
+                {city.name} - <Temperature value={city.temperature}/> {city.weather.main}
+                <SmallIcon weather={city.weather} />
+            </CityText>
+            <RefreshButton onClick={dispatchWrapper(dispatch, refreshByIdAsync(city.id))} />
+            <CloseButton onClick={dispatchWrapper(dispatch, removeCity(city))} />
         </CityDiv>
     );
 }
@@ -54,7 +71,8 @@ export function CityList() {
         <div>
             <input type="text" placeholder="Type city name" value={cityName} onChange={e => setCityName(e.target.value)} />
             <button onClick={() => dispatch(validateByNameAsync(cityName))}>+</button>
-            <button onClick={() => dispatch(debugFillAsync())}>Debug Fill</button>
+            {/* TODO: Hide */}
+            {/* <button onClick={() => dispatch(debugFillAsync())}>Debug Fill</button> */}
             <ErrorRow>{error}</ErrorRow>
             <div>
                 {stuff}

@@ -7,7 +7,6 @@ import {
 import * as debug from '../app/debug'
 import { mockList } from '../app/apiMock';
 
-const DEBUG = true;
 const MAX_CITIES = 8;
 
 export const citySlice = createSlice({
@@ -17,31 +16,37 @@ export const citySlice = createSlice({
       error: "",
   },
   reducers: {
-    setError: (state, action) => {
-      state.error = action.payload;
+    validateStart: (state, action) => {
+      state.error = "";
+      // TODO: Freeze input + spinner?
     },
-    clearError: (state, action) => {
-      state.error = '';
-    },
-    addCity: (state, action) => {
+    validateSuccess: (state, action) => {
       const city = action.payload;
-      // Duplicate guard
+      // Duplicate guarded city addition
       if (state.list.filter(c => c.id === city.id).length) {
         state.error = `City ${city.name} already added`
       } else {
         state.list = [city, ...state.list].slice(0, MAX_CITIES)
       }
     },
+    validateError: (state, action) => {
+      state.error = action.payload;
+    },
     removeCity: (state, action) => {
       const city = action.payload;
       console.log('removeCity', city);
       state.list = state.list.filter(c => c.id !== city.id);
     },
+
     updateCity: (state, action) => {
       const city = action.payload;
       console.log('updateCity', city);
-      state.list = state.list.map(c => c.id === city.id ? city : c);
-
+      if (city) {
+        state.list = state.list.map(c => c.id === city.id ? city : c);
+        state.error = "";
+      } else {
+        state.error = "Update failed, try again later";
+      }
     },
     clear: (state, action) => {
       state.list = [];
@@ -49,24 +54,26 @@ export const citySlice = createSlice({
   },
 });
 
-// Externally used actions
-export const { addCity, removeCity, clear } = citySlice.actions;
-// Interally used actions (thunk dispatches)
-const { updateCity, setError, clearError } = citySlice.actions;
+export const {
+  // Externally used actions
+  removeCity, clear,
+  // Interally used actions (thunk dispatches; exported for testing)
+  validateStart, validateSuccess, validateError,
+  updateCity,
+} = citySlice.actions;
 
 // Thunks for async actions
 export const validateByNameAsync = cityName => async dispatch => {
   console.log(`validateByNameAsync '${cityName}'`);
-  dispatch(clearError());
-  // TODO: Set loading state
+  dispatch(validateStart());
 
   try {
     const result = await fetchCurrentByName(cityName);
     console.log('validateByNameAsync result = ', result);
-    dispatch(addCity(result));
+    dispatch(validateSuccess(result));
   } catch (err) {
     console.error(err);
-    dispatch(setError(err.message || 'Unknown error occurred'));
+    dispatch(validateError(err.message || 'Unknown error occurred'));
   }
 };
 
@@ -80,7 +87,6 @@ export const debugFillAsync = () => async dispatch => {
 
 export const refreshByIdAsync = cityId => async dispatch => {
   console.log('refreshByIdAsync', cityId);
-
   try {
     const result = await fetchCurrentById(cityId);
     if (debug.randomizeTempsOnRefresh) {
@@ -89,10 +95,9 @@ export const refreshByIdAsync = cityId => async dispatch => {
     }
     console.log('refreshByIdAsync result = ', result);
     dispatch(updateCity(result));
-    dispatch(clearError());
   } catch (err) {
     console.error(err);
-    dispatch(setError(err.message || 'Unknown error occurred'));
+    dispatch(updateCity(null));
   }
 };
 

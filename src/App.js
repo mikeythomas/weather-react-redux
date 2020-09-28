@@ -2,18 +2,23 @@ import React from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import { CityList } from './features/CityList';
+import { Details } from './features/Details';
 
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <div>
-        <CityList />
-        {/* <Details /> */}
+      <div className="App-wrapper">
+        <div className="App-pane App-leftPane">
+          <CityList />
+        </div>
+        <div className="App-pane App-rightPane">
+          <Details />
+        </div>
       </div>
 
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Counter />
         <p>
@@ -57,7 +62,7 @@ function App() {
             React Redux
           </a>
         </span>
-      </header>
+      </header> */}
     </div>
   );
 }

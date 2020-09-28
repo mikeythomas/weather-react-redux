@@ -1,0 +1,57 @@
+.empty {
+  color: gray;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+}
+
+.headerText {
+  display: inline-block;
+  flex: auto;
+  font-size: 32px;
+  margin: 0;
+}
+
+.headerRefresh {
+  flex: none;
+}
+
+.iconButton {
+  appearance: none;
+  background: none;
+  border: none;
+}
+
+.iconButton:hover {
+  background: #ddf;
+}
+
+.iconRefresh {
+  height: 32px;
+  flex: none;
+}
+
+.detailRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.iconHuge {
+  height: 8px;
+}
+
+.detailList {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailList > div {
+  height: 100%;
+}
+
+.forecastRow {
+  display: flex;
+  flex-direction: row;
+}

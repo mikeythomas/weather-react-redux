@@ -1,99 +1,107 @@
-export const data = [
+export const mockList = [
   {
     id: 1,
     name: "Halifax",
     temperature: 9.81,
-    text: "Rain",
+    "weather": {
+      "id": 800,
+      "main": "Clear",
+      "description": "clear sky",
+      "icon": "01d"
+    },
   },
   {
     id: 2,
     name: "London",
     temperature: 12.12,
-    text: "Cloudy",
+    "weather": {
+      "id": 500,
+      "main": "Rain",
+      "description": "light rain",
+      "icon": "10d"
+    },
   },
   {
     id: 3,
     name: "New York",
     temperature: 4.99,
-    text: "Sunny",
+    "weather": {
+      "id": 801,
+      "main": "Clouds",
+      "description": "few clouds",
+      "icon": "02d"
+    },
   },
 ];
 
-export function getCurrentByName(cityName) {
-  const city = data.filter(c => c.name === cityName);
-  if (!city.length) {
-    return {success: false, error: "City not found"};
-  }
-  return {...city[0], success: true};
-}
-
-export function getCurrentById(cityId) {
-  const city = data.filter(c => c.id === cityId);
-  if (!city.length) {
-    console.error(`Refresh failed on city id ${cityId}`);
-    return {success: false, error: "Unknown error"};
-  }
-  const freshCity = {...city[0]};
-  freshCity.temperature += 20*Math.random() - 10;
-  freshCity.success = true;
-  return freshCity;
-}
-
-export function getForecastById(cityId) {
-  throw new Error("Not implemented");
-}
-
-const currentFail = {
-  "cod": "404",
-  "message": "city not found"
-};
-
-const currentHalifax = {
-  "coord": {
-    "lon": -63.57,
-    "lat": 44.65
-  },
-  "weather": [
+// TODO: Do I need to use city.timezone to adjust list[].dt?
+export const mockDetail = {
+  "city": "Halifax",
+  "weatherList": [
     {
-      "id": 501,
-      "main": "Rain",
-      "description": "moderate rain",
-      "icon": "10d"
+      "timestamp": 1600963200000,
+      "temperature": 20.29,
+      "pressure": 1008,
+      "weather": {
+        "id": 800,
+        "main": "Clear",
+        "description": "clear sky",
+        "icon": "01d"
+      },
+      "windSpeed": 4.85,
+      "windDeg": 279
+    },
+    {
+      "timestamp": 1601049600000,
+      "temperature": 16.11,
+      "pressure": 1019,
+      "weather": {
+        "id": 804,
+        "main": "Clouds",
+        "description": "overcast clouds",
+        "icon": "04d"
+      },
+      "windSpeed": 0.32,
+      "windDeg": 229
+    },
+    {
+      "timestamp": 1601136000000,
+      "temperature": 19.71,
+      "pressure": 1020,
+      "weather": {
+        "id": 500,
+        "main": "Rain",
+        "description": "light rain",
+        "icon": "10d"
+      },
+      "windSpeed": 2.62,
+      "windDeg": 192
+    },
+    {
+      "timestamp": 1601222400000,
+      "temperature": 19.59,
+      "pressure": 1019,
+      "weather": {
+        "id": 804,
+        "main": "Clouds",
+        "description": "overcast clouds",
+        "icon": "04d"
+      },
+      "windSpeed": 4.95,
+      "windDeg": 213
+    },
+    {
+      "timestamp": 1601308800000,
+      "temperature": 19.25,
+      "pressure": 1019,
+      "weather": {
+        "id": 500,
+        "main": "Rain",
+        "description": "light rain",
+        "icon": "10d"
+      },
+      "windSpeed": 4.95,
+      "windDeg": 219
     }
-  ],
-  "base": "stations",
-  "main": {
-    "temp": 9.81,
-    "feels_like": 7.14,
-    "temp_min": 9.44,
-    "temp_max": 10.56,
-    "pressure": 1004,
-    "humidity": 96
-  },
-  "visibility": 10000,
-  "wind": {
-    "speed": 3.58,
-    "deg": 41,
-    "gust": 9.83
-  },
-  "rain": {
-    "1h": 3.45
-  },
-  "clouds": {
-    "all": 100
-  },
-  "dt": 1600798966,
-  "sys": {
-    "type": 3,
-    "id": 2019613,
-    "country": "CA",
-    "sunrise": 1600768914,
-    "sunset": 1600812708
-  },
-  "timezone": -10800,
-  "id": 6324729,
-  "name": "Halifax",
-  "cod": 200
+  ]
 };
-
-const currentLondon = {...currentHalifax};
